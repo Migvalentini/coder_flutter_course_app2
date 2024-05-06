@@ -46,13 +46,35 @@ class _TransactionFormState extends State<TransactionForm> {
               decoration: InputDecoration(labelText: 'Value (R\$)'),
               controller: valueController,
             ),
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Text('No Date Chosen'),
+                  TextButton(
+                    style: TextButton.styleFrom(primary: Colors.purple),
+                    onPressed: () {},
+                    child: Text(
+                      'Choose Date',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                ElevatedButton(
                   onPressed: _submitForm,
                   child: Text('New Transaction'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.purple),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.purple,
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
                 ),
               ],
             )

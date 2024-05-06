@@ -16,7 +16,7 @@ class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData();
- 
+
     return MaterialApp(
       home: MyHomePage(),
       theme: theme.copyWith(
@@ -50,8 +50,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-    final List<Transaction> _transactions = [
-    //Transaction(id: 't1', title: 'New Shoes', value: 69.9, date: DateTime.now()),
+  final List<Transaction> _transactions = [
+    Transaction(
+        id: 't1', title: 'New Shoes', value: 69.9, date: DateTime.now()),
+    Transaction(
+      id: 't0',
+      title: 'Conta Antiga',
+      value: 400000.00,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -78,13 +85,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Navigator.of(context).pop();
   }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return TransactionForm(_addTransaction);
-      }
-    );
+        context: context,
+        builder: (_) {
+          return TransactionForm(_addTransaction);
+        });
   }
 
   @override
