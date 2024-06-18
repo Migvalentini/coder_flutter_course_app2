@@ -79,7 +79,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     ),
                     TextButton(
-                      style: TextButton.styleFrom(primary: Colors.purple),
+                      style: TextButton.styleFrom(foregroundColor: Colors.purple),
                       onPressed: _showDatePicker,
                       child: Text(
                         'Choose Date',
@@ -96,7 +96,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     onPressed: _submitForm,
                     child: Text('New Transaction'),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.purple,
+                      backgroundColor: Colors.purple,
                       textStyle: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold
