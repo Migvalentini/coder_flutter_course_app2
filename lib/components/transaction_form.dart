@@ -1,7 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, prefer_const_constructors_in_immutables, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'adaptative_button.dart';
+import 'adaptative_textField.dart';
+import 'adaptative_datePicker.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double, DateTime) onSubmit;
@@ -17,7 +19,7 @@ class _TransactionFormState extends State<TransactionForm> {
   final _valueController = TextEditingController();
   DateTime? _selectedDate = DateTime.now();
 
-  _submitForm() {
+  void _submitForm() {
     final title = _titleController.text;
     final value = double.tryParse(_valueController.text) ?? 0.0;
 
@@ -26,21 +28,6 @@ class _TransactionFormState extends State<TransactionForm> {
     }
 
     widget.onSubmit(title, value, _selectedDate!);
-  }
-
-  _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if(pickedDate == null) {
-        return;
-      }
-
-      setState(() => _selectedDate = pickedDate);
-    });
   }
 
   @override
@@ -57,54 +44,35 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
           child: Column(
             children: [
-              TextField(
+              AdaptativeTextField(
                 onSubmitted: (_) => _submitForm(),
-                decoration: InputDecoration(labelText: 'Title'),
+                label: 'Title',
                 controller: _titleController,
+                keyboardType: TextInputType.text,
               ),
-              TextField(
+              AdaptativeTextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onSubmitted: (_) => _submitForm(),
-                decoration: InputDecoration(labelText: 'Value (R\$)'),
+                label: 'Value (R\$)',
                 controller: _valueController,
               ),
-              Container(
-                height: 70,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedDate == null ? 'No Date Chosen' : 
-                        'Picked Date: ${DateFormat('dd/MM/y').format(_selectedDate!)}',
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(foregroundColor: Colors.purple),
-                      onPressed: _showDatePicker,
-                      child: Text(
-                        'Choose Date',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
+              AdaptativeDatePicker(
+                selectedDate: _selectedDate,
+                onDateChanged: (newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                },
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ElevatedButton(
+                  AdaptativeButton(
+                    label: 'New Transaction', 
                     onPressed: _submitForm,
-                    child: Text('New Transaction'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

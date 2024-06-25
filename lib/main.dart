@@ -111,10 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     bool isLandscape = mediaQuery.orientation == Orientation.landscape;
 
+    final iconList = Platform.isIOS ? CupertinoIcons.refresh : Icons.list;
+    final chartList = Platform.isIOS ? CupertinoIcons.refresh : Icons.show_chart;
+
     final actions = <Widget>[
       if (isLandscape)
         _getIconButton(
-          _showChart ? Icons.list : Icons.show_chart,
+          _showChart ? iconList : chartList,
           () {
             setState(() {
               _showChart = !_showChart;
@@ -122,69 +125,67 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       _getIconButton(
-        Icons.add,
+        Platform.isIOS ? CupertinoIcons.add : Icons.add,
         () => _openTransactionFormModal(context),
       ),
     ];
 
-    final appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text('Personal Expenses'),
-            trailing: Row(
-              children: actions,
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal Expenses',
-              // MediaQuery.of(context).textScaleFactor = size defined by the user in the mobile settings
-              // style: TextStyle(
-              //   fontSize: 10 * MediaQuery.of(context).textScaleFactor * 2,
-              // ),
-            ),
-            actions: actions,
-          );
+    final appBar = AppBar(
+      title: Text(
+        'Personal Expenses',
+        // MediaQuery.of(context).textScaleFactor = size defined by the user in the mobile settings
+        // style: TextStyle(
+        //   fontSize: 10 * MediaQuery.of(context).textScaleFactor * 2,
+        // ),
+      ),
+      actions: actions,
+    );
 
     final availableHeight = mediaQuery.size.height -
-        appBar.preferredSize.height -
-        mediaQuery.padding.top;
+      appBar.preferredSize.height -
+      mediaQuery.padding.top;
 
-    final bodyPage = SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Show Grafic'),
-                Switch.adaptive(
+    final bodyPage = SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Grafic'),
+                  Switch.adaptive(
                     activeColor: Theme.of(context).colorScheme.secondary,
                     value: _showChart,
                     onChanged: (value) {
                       setState(() {
                         _showChart = value;
                       });
-                    }),
-              ],
-            ),
-          if (_showChart || !isLandscape)
-            Container(
+                    }
+                  ),
+                ],
+              ),
+            if (_showChart || !isLandscape)
+              Container(
                 height: availableHeight * (isLandscape ? 0.8 : 0.3),
                 child: Chart(_recentTransactions)),
-          if (!_showChart || !isLandscape)
-            Container(
+            if (!_showChart || !isLandscape)
+              Container(
                 height: availableHeight * (isLandscape ? 1 : 0.7),
                 child: TransactionList(_transactions, _removeTransaction))
-        ],
-      ),
+          ],
+        ),
+      )
     );
+    
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
               middle: Text('Personal Expenses'),
               trailing: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: actions,
               ),
             ),
